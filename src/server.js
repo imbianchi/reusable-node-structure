@@ -1,13 +1,14 @@
 const passport = require('passport');
 const express = require('express');
 const config = require('config');
+const bodyParser = require("body-parser");
 const DBConn = require('../database');
 const Routes = require('./routes');
 
 
 class Server {
     constructor() {
-        this.app = express;
+        this.app = express();
         this.db = new DBConn(config);
         this.passport = passport;
         this.host = config.get('server.host');
@@ -31,17 +32,15 @@ class Server {
 
     async startServer() {
         try {
-            this.app().use(this.app.json());
-            this.app().get('/', (req, res) => console.log('UEEEEEEEEEEEE'));
+            this.app.use(bodyParser.json());
 
-            this.app().listen(this.port, () => {
+            this.app.listen(this.port, () => {
                 console.log(`
                     Server is running!    
                     --- HOST: ${this.host} ---
                     --- PORT: ${this.port} ---
                 `);
-            });
-            
+            });            
         } catch (error) {
             console.error(`
                 Server initialization error:
@@ -59,7 +58,8 @@ class Server {
 
         await this.startServer();
         
-
+        // this.router.get('/', (req, res) => res.send('TESTEEEEE'))
+        this.app.get('/', (req, res) => res.send('TESTEEEEE'))
         // this.app.route(this.routes);
     }
 }

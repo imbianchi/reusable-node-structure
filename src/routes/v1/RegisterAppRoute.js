@@ -1,4 +1,4 @@
-const httpMethods = require("../../app/enum/httpMethods")
+const httpMethods = require("../../../app/enum/httpMethods")
 
 module.exports = class RegisterAppRoute {
     constructor() {
