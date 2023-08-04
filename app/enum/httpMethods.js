@@ -1,0 +1,17 @@
+module.exports = {
+    POST: 'POST',
+    GET: 'GET',
+    PUT: 'PUT',
+    PATCH: 'PATCH',
+    DELETE: 'DELETE',
+    COPY: 'COPY',
+    HEAD: 'HEAD',
+    OPTIONS: 'OPTIONS',
+    LINK: 'LINK',
+    UNLINK: 'UNLINK',
+    PURGE: 'PURGE',
+    LOCK: 'LOCK',
+    UNLOCK: 'UNLOCK',
+    PROPFIND: 'PROPFIND',
+    VIEW: 'VIEW',
+}

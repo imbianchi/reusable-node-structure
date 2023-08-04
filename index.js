@@ -1,6 +1,4 @@
 const Server = require('./src/server');
 
 
-const server = new Server();
-
-server.init();
+new Server().init();
