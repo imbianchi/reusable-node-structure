@@ -1,4 +1,3 @@
-const passport = require('passport');
 const config = require('config');
 const DBConn = require('../database');
 const Routes = require('./routes');
@@ -8,7 +7,6 @@ const Middleware = require('./middleware');
 module.exports = class Server {
     constructor(app) {
         this.db = new DBConn(config);
-        this.passport = passport;
         this.port = config.get('server.port');
         this.plugins = config.get('plugins');
         this.app = app();
@@ -54,8 +52,6 @@ module.exports = class Server {
         await this.db.initConn(config);
 
         this.router.registerRoutes();
-
-        this.middleware.validateHandlers();
 
         await this.startServer();
     }

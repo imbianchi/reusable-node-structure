@@ -1,6 +1,5 @@
 const httpMethods = require("../../../app/enum/httpMethods");
 const AppsControllers = require('../controllers/AppsControllers');
-const appsControllers = new AppsControllers();
 
 
 module.exports = class AppsRoutes {
@@ -11,42 +10,67 @@ module.exports = class AppsRoutes {
             {
                 path: '/apps',
                 auth: true,
-                notes: [],
-                disabled: false,
-                methods: [
-                    httpMethods.GET,
-                    httpMethods.POST,
-                ],
-                handler: (req, res) => {
-                    if (req.method === httpMethods.GET) {
-                        return this.controller.getAll(req, res);
-                    }
-
-                    if (req.method === httpMethods.POST) {
-                        return this.controller.registerOne(req, res);
-                    }
+                methods: httpMethods.GET,
+                validate: {
+                    headers: () => { },
                 },
+                response: {
+                    schema: () => { },
+                },
+                handler: (req, res) => this.controller.getAll(req, res),
             },
             {
                 path: '/apps/:id',
                 auth: true,
-                notes: [],
-                methods: [
-                    httpMethods.GET,
-                ],
-                handler: (req, res) => {
-                    if (req.method === httpMethods.GET) {
-                        return this.controller.getOne(req, res);
-                    }
-
-                    if (req.method === httpMethods.DELETE) {
-                        return this.controller.deleteOne(req, res);
-                    }
-
-                    if (req.method === httpMethods.PUT) {
-                        return this.controller.updateOne(req, res);
-                    }
+                methods: httpMethods.GET,
+                validate: {
+                    headers: () => { },
+                    params: {},
                 },
+                response: {
+                    schema: () => { },
+                },
+                handler: (req, res) => this.controller.getOne(req, res),
+            },
+            {
+                path: '/apps',
+                auth: true,
+                methods: httpMethods.POST,
+                validate: {
+                    headers: () => { },
+                    payload: {},
+                },
+                response: {
+                    schema: () => { },
+                },
+                handler: (req, res) => this.controller.registerOne(req, res),
+            },
+            {
+                path: '/apps/:id',
+                auth: true,
+                methods: httpMethods.DELETE,
+                validate: {
+                    headers: () => { },
+                    params: {},
+                },
+                response: {
+                    schema: () => { },
+                },
+                handler: (req, res) => this.controller.deleteOne(req, res),
+            },
+            {
+                path: '/apps/:id',
+                auth: true,
+                methods: httpMethods.PUT,
+                validate: {
+                    headers: () => { },
+                    params: {},
+                    payload: {}
+                },
+                response: {
+                    schema: () => { },
+                },
+                handler: (req, res) => this.controller.updateOne(req, res),
             },
         ]
     }

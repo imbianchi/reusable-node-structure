@@ -10,57 +10,67 @@ module.exports = class CronRoutes {
             {
                 path: '/cron-services',
                 auth: true,
-                notes: [],
-                methods: [
-                    httpMethods.GET,
-                    httpMethods.POST,
-                ],
+                method: httpMethods.GET,
                 validate: {
                     headers: () => { },
-                    payload: () => { },
                 },
                 response: {
                     schema: () => { },
                 },
-                handler: (req, res) => {
-                    if (req.method === httpMethods.GET) {
-                        return this.controller.getAll(req, res);
-                    }
-
-                    if (req.method === httpMethods.POST) {
-                        return this.controller.registerOne(req, res);
-                    }
+                handler: (req, res) => this.controller.getAll(req, res),
+            },
+            {
+                path: '/cron-services',
+                auth: true,
+                method: httpMethods.POST,
+                validate: {
+                    headers: () => { },
+                    payload: {},
                 },
+                response: {
+                    schema: () => { },
+                },
+                handler: (req, res) => this.controller.registerOne(req, res),
             },
             {
                 path: '/cron-services/:id',
                 auth: true,
-                notes: [],
-                methods: [
-                    httpMethods.GET,
-                    httpMethods.DELETE,
-                    httpMethods.PUT,
-                ],
+                method: httpMethods.DELETE,
                 validate: {
                     headers: () => { },
-                    payload: () => { },
+                    params: {},
                 },
                 response: {
                     schema: () => { },
                 },
-                handler: (req, res) => {
-                    if (req.method === httpMethods.GET) {
-                        return this.controller.getOne(req, res);
-                    }
-
-                    if (req.method === httpMethods.DELETE) {
-                        return this.controller.deleteOne(req, res);
-                    }
-
-                    if (req.method === httpMethods.PUT) {
-                        return this.controller.updateOne(req, res);
-                    }
+                handler: (req, res) => this.controller.deleteOne(req, res),
+            },
+            {
+                path: '/cron-services/:id',
+                auth: true,
+                method: httpMethods.PUT,
+                validate: {
+                    headers: () => { },
+                    payload: {},
+                    params: {},
                 },
+                response: {
+                    schema: () => { },
+                },
+                handler: (req, res) => this.controller.updateOne(req, res),
+            },
+            {
+                path: '/cron-services/:id',
+                auth: true,
+                method: httpMethods.GET,
+                validate: {
+                    headers: () => { },
+                    params: {},
+                },
+                response: {
+                    schema: () => { },
+                },
+                handler: (req, res) => this.controller.getOne(req, res),
             },
         ]
     }

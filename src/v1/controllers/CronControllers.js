@@ -15,4 +15,8 @@ module.exports = class CronControllers {
 
     updateOne(req, res) {
     }
+
+    getOne() {
+        
+    }
 }
