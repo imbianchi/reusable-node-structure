@@ -1,17 +1,19 @@
 const passport = require('passport');
 const config = require('config');
 const DBConn = require('../database');
-const Routes = require('./routes/routes');
+const Routes = require('./routes');
+const Middleware = require('./middleware');
 
 
 module.exports = class Server {
     constructor(app) {
         this.db = new DBConn(config);
         this.passport = passport;
-        this.host = config.get('server.host');
         this.port = config.get('server.port');
         this.plugins = config.get('plugins');
         this.app = app();
+        this.router = new Routes(this.app);
+        this.middleware = new Middleware(app, this.router.router.routes);
     }
 
     async initPlugins() {
@@ -28,12 +30,9 @@ module.exports = class Server {
 
     async startServer() {
         try {
-            new Routes(this.app).registerRoutes();
-
             this.app.listen(this.port, () => {
                 console.log(`
                     Server is running!    
-                    --- HOST: ${this.host} ---
                     --- PORT: ${this.port} ---
                 `);
             });
@@ -53,6 +52,10 @@ module.exports = class Server {
         await this.initPlugins();
 
         await this.db.initConn(config);
+
+        this.router.registerRoutes();
+
+        this.middleware.validateHandlers();
 
         await this.startServer();
     }

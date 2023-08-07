@@ -1,5 +1,6 @@
-const httpMethods = require('../../app/enum/httpMethods');
-const v1Routes = require('./v1');
+const httpMethods = require('../app/enum/httpMethods');
+const httpStatus = require('./misc/httpStatus');
+const v1Routes = require('./v1/routes');
 
 module.exports = class Routes {
     constructor(app, version = `v1`) {
@@ -14,16 +15,17 @@ module.exports = class Routes {
                     methods: [httpMethods.GET],
                     auth: false,
                     notes: [],
+                    disabled: false,
                     validate: {
-                        headers: () => {},
-                        payload: () => {},
+                        headers: () => { },
+                        payload: () => { },
                     },
                     response: {
-                        schema: () => {},
+                        schema: () => { },
                     },
                     handler: (req, res) => {
                         res.json({
-                            status: 200,
+                            status: httpStatus.SUCCESS,
                             message: "Server is running!",
                             version: this.version,
                         })
@@ -34,12 +36,24 @@ module.exports = class Routes {
         };
     }
 
-    async registerRoutes() {
+    validateRoutes() {
+        const validRoutes = [];
+
         this.router.routes.map(route => {
             route.path = '/' +
                 this.router.version +
                 (route.path !== '/' ? route.path : '');
 
+            if (!route.disabled) {
+                validRoutes.push(route);
+            }
+        });
+
+        return validRoutes;
+    }
+
+    async registerRoutes() {
+        this.validateRoutes().forEach(route => {
             switch (true) {
                 case route.methods.includes(httpMethods.GET):
                     this.app.get(route.path, route.handler);
@@ -59,6 +73,6 @@ module.exports = class Routes {
                 default:
                     this.app.get(route.path, route.handler);
             }
-        });
+        })
     }
 };
