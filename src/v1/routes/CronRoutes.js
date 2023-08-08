@@ -12,10 +12,10 @@ module.exports = class CronRoutes {
                 auth: true,
                 method: httpMethods.GET,
                 validate: {
-                    headers: () => { },
+                    headers: {},
                 },
                 response: {
-                    schema: () => { },
+                    schema: {},
                 },
                 handler: (req, res) => this.controller.getAll(req, res),
             },
@@ -24,11 +24,11 @@ module.exports = class CronRoutes {
                 auth: true,
                 method: httpMethods.POST,
                 validate: {
-                    headers: () => { },
+                    headers: {},
                     payload: {},
                 },
                 response: {
-                    schema: () => { },
+                    schema: {},
                 },
                 handler: (req, res) => this.controller.registerOne(req, res),
             },
@@ -37,11 +37,11 @@ module.exports = class CronRoutes {
                 auth: true,
                 method: httpMethods.DELETE,
                 validate: {
-                    headers: () => { },
+                    headers: {},
                     params: {},
                 },
                 response: {
-                    schema: () => { },
+                    schema: {},
                 },
                 handler: (req, res) => this.controller.deleteOne(req, res),
             },
@@ -50,12 +50,12 @@ module.exports = class CronRoutes {
                 auth: true,
                 method: httpMethods.PUT,
                 validate: {
-                    headers: () => { },
+                    headers: {},
                     payload: {},
                     params: {},
                 },
                 response: {
-                    schema: () => { },
+                    schema: {},
                 },
                 handler: (req, res) => this.controller.updateOne(req, res),
             },
@@ -64,11 +64,11 @@ module.exports = class CronRoutes {
                 auth: true,
                 method: httpMethods.GET,
                 validate: {
-                    headers: () => { },
+                    headers: {},
                     params: {},
                 },
                 response: {
-                    schema: () => { },
+                    schema: {},
                 },
                 handler: (req, res) => this.controller.getOne(req, res),
             },

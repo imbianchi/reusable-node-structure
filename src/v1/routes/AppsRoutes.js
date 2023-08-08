@@ -12,10 +12,10 @@ module.exports = class AppsRoutes {
                 auth: true,
                 methods: httpMethods.GET,
                 validate: {
-                    headers: () => { },
+                    headers: {},
                 },
                 response: {
-                    schema: () => { },
+                    schema: {},
                 },
                 handler: (req, res) => this.controller.getAll(req, res),
             },
@@ -24,11 +24,11 @@ module.exports = class AppsRoutes {
                 auth: true,
                 methods: httpMethods.GET,
                 validate: {
-                    headers: () => { },
+                    headers: {},
                     params: {},
                 },
                 response: {
-                    schema: () => { },
+                    schema: {},
                 },
                 handler: (req, res) => this.controller.getOne(req, res),
             },
@@ -37,11 +37,11 @@ module.exports = class AppsRoutes {
                 auth: true,
                 methods: httpMethods.POST,
                 validate: {
-                    headers: () => { },
+                    headers: {},
                     payload: {},
                 },
                 response: {
-                    schema: () => { },
+                    schema: {},
                 },
                 handler: (req, res) => this.controller.registerOne(req, res),
             },
@@ -50,11 +50,11 @@ module.exports = class AppsRoutes {
                 auth: true,
                 methods: httpMethods.DELETE,
                 validate: {
-                    headers: () => { },
+                    headers: {},
                     params: {},
                 },
                 response: {
-                    schema: () => { },
+                    schema: {},
                 },
                 handler: (req, res) => this.controller.deleteOne(req, res),
             },
@@ -63,12 +63,12 @@ module.exports = class AppsRoutes {
                 auth: true,
                 methods: httpMethods.PUT,
                 validate: {
-                    headers: () => { },
+                    headers: {},
                     params: {},
                     payload: {}
                 },
                 response: {
-                    schema: () => { },
+                    schema: {},
                 },
                 handler: (req, res) => this.controller.updateOne(req, res),
             },

@@ -7,7 +7,6 @@ module.exports = class Routes {
     constructor(app, version = `v1`) {
         this.app = app;
         this.version = version;
-        this.beforeRequest.bind(this.router);
         this.router = {
             app: this.app,
             version: this.version,
@@ -17,9 +16,10 @@ module.exports = class Routes {
                     method: httpMethods.GET,
                     auth: false,
                     validate: {
-                        headers: {
-
-                        },
+                        headers: Joi.object({
+                            agent: Joi.string().default('browser'),
+                            'app-version': Joi.number().default(0),
+                        }).unknown(),
                     },
                     response: {
                         schema: Joi.object().keys({
@@ -58,9 +58,11 @@ module.exports = class Routes {
     }
 
     beforeRequest(req, res, next) {
-        console.log(this, '0000----')
-        // this.router.routes.forEach(route => {
-        // })
+        this.router.routes.forEach(route => {
+            const validations = route.validate;
+            const responseValidations = route.response;
+        });
+
         next();
     }
 
@@ -68,7 +70,11 @@ module.exports = class Routes {
         this.validateRoutes().forEach(route => {
             switch (true) {
                 case route.method === httpMethods.GET:
-                    this.app.get(route.path, this.beforeRequest, route.handler);
+                    this.app.get(
+                        route.path,
+                        this.beforeRequest.bind(this),
+                        route.handler
+                    );
 
                 case route.method === httpMethods.POST:
                     this.app.post(route.path, route.handler);

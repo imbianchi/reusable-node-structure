@@ -1,7 +1,6 @@
 const config = require('config');
 const DBConn = require('../database');
 const Routes = require('./routes');
-const Middleware = require('./middleware');
 
 
 module.exports = class Server {
@@ -11,7 +10,6 @@ module.exports = class Server {
         this.plugins = config.get('plugins');
         this.app = app();
         this.router = new Routes(this.app);
-        this.middleware = new Middleware(app, this.router.router.routes);
     }
 
     async initPlugins() {
