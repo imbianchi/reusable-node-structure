@@ -1,6 +1,7 @@
 const httpMethods = require('../app/enum/httpMethods');
 const httpStatus = require('./misc/httpStatus');
 const v1Routes = require('./v1/routes');
+const Middleware = require('./middleware');
 const Joi = require('joi');
 
 module.exports = class Routes {
@@ -39,6 +40,7 @@ module.exports = class Routes {
                 ...v1Routes,
             ]
         };
+        this.middleware = new Middleware(this.app, this.router.routes);
     }
 
     validateRoutes() {
@@ -57,39 +59,29 @@ module.exports = class Routes {
         return validRoutes;
     }
 
-    beforeRequest(req, res, next) {
-        this.router.routes.forEach(route => {
-            const validations = route.validate;
-            const responseValidations = route.response;
-        });
-
-        next();
-    }
-
     async registerRoutes() {
         this.validateRoutes().forEach(route => {
             switch (true) {
                 case route.method === httpMethods.GET:
                     this.app.get(
                         route.path,
-                        this.beforeRequest.bind(this),
-                        route.handler
+                        route.handler,
                     );
 
-                case route.method === httpMethods.POST:
-                    this.app.post(route.path, route.handler);
+                // case route.method === httpMethods.POST:
+                //     this.app.post(route.path, this.middleware, route.handler);
 
-                case route.method === httpMethods.PUT:
-                    this.app.put(route.path, route.handler);
+                // case route.method === httpMethods.PUT:
+                //     this.app.put(route.path, this.middleware, route.handler);
 
-                case route.method === httpMethods.DELETE:
-                    this.app.delete(route.path, route.handler);
+                // case route.method === httpMethods.DELETE:
+                //     this.app.delete(route.path, this.middleware, route.handler);
 
-                case route.method === httpMethods.PATCH:
-                    this.app.patch(route.path, route.handler);
-                    break;
-                default:
-                    this.app.get(route.path, route.handler);
+                // case route.method === httpMethods.PATCH:
+                //     this.app.patch(route.path, this.middleware, route.handler);
+                //     break;
+                // default:
+                //     this.app.get(route.path, this.middleware, route.handler);
             }
         })
     }

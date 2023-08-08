@@ -14,6 +14,8 @@ module.exports = class DBConn {
 
     async initConn() {
         try {
+            console.log('Connecting to database...');
+
             await this.db.connect(
                 this.config.has('db.connString') ?
                     this.config.get('db.connString') :
@@ -27,8 +29,8 @@ module.exports = class DBConn {
             })
         } catch (error) {
             console.error(`
-                DB Connection initialization error:
                 --- [ERROR] ---
+                DB Connection initialization error:
                 ${error}
             `);
         }

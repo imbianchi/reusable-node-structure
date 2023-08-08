@@ -34,8 +34,8 @@ module.exports = class Server {
             });
         } catch (error) {
             console.error(`
-                Server initialization error:
                 --- [ERROR] ---
+                Server initialization error:
                 ${error}
             `)
 
@@ -47,7 +47,7 @@ module.exports = class Server {
     async init() {
         await this.initPlugins();
 
-        await this.db.initConn(config);
+        // await this.db.initConn(config);
 
         this.router.registerRoutes();
 
