@@ -1,4 +1,4 @@
-const AppsRoutes = require('./AppsRoutes');
+const AppsRoutes = require('./AppRoutes');
 
 module.exports = [
     new AppsRoutes(),

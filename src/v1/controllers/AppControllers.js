@@ -7,6 +7,9 @@ module.exports = class AppsControllers {
     getAll(req, res) {
     }
 
+    getOne(req, res) {
+    }
+
     registerOne(req, res) {
     }
 

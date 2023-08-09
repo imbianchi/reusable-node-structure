@@ -40,7 +40,10 @@ module.exports = class Routes {
                 ...v1Routes,
             ]
         };
-        this.middleware = new Middleware(this.app, this.router.routes);
+        this.middleware = new Middleware(
+            this.app,
+            this.router.routes,
+        );
     }
 
     validateRoutes() {

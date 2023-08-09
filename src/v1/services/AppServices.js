@@ -1,6 +1,6 @@
 
 
-module.exports = class ServiceServices {
+module.exports = class AppServices {
     constructor(data) {
         this.data = data;
     }
