@@ -1,37 +1,61 @@
 const config = require('config');
-const DBConn = require('../database');
+const plugins = require('../app/plugins');
+const HapiReactViews = require('hapi-react-views');
 const Routes = require('./routes');
+const Middleware = require('../app/middleware');
 
 
 module.exports = class Server {
-    constructor(app) {
-        this.db = new DBConn(config);
-        this.port = config.get('server.port');
-        this.plugins = config.get('plugins');
-        this.app = app();
-        this.router = new Routes(this.app);
+    constructor(App) {
+        this.server = App.server({
+            host: config.get('server.host'),
+            port: config.get('server.port'),
+        })
+    }
+
+    async initRoutes() {
+        this.server.route(new Routes('v1'));
     }
 
     async initPlugins() {
-        this.plugins.forEach(pluginName => {
-            const plugin = require(pluginName);
+        await this.server.register(plugins);
+    }
 
-            if (typeof plugin.init !== 'function') return;
+    async initViews() {
+        require('@babel/register')({
+            presets: ['@babel/preset-react', '@babel/preset-env']
+        });
 
-            console.log(`Initiating plugin ---> `, pluginName);
-
-            plugin.init();
+        this.server.views({
+            engines: {
+                jsx: HapiReactViews
+            },
+            relativeTo: __dirname,
+            path: 'views'
         });
     }
 
-    async startServer() {
+    async initMiddleware() {
+        this.server.ext('onRequest', async (req, h) => {
+            new Middleware().beforeRequest();
+            return h.continue;
+        });
+
+        // this.server.ext('response', async (req, h) => {
+        //     new Middleware().afterRequest();
+        //     return h.continue;
+        // });
+    }
+
+    async initServer() {
         try {
-            this.app.listen(this.port, () => {
-                console.log(`
-                    Server is running!    
-                    --- PORT: ${this.port} ---
-                `);
-            });
+            await this.server.start();
+
+            console.log(`
+                Server is running!
+                --- HOST: ${config.get('server.host')} ---
+                --- PORT: ${config.get('server.port')} ---
+            `);
         } catch (error) {
             console.error(`
                 --- [ERROR] ---
@@ -41,16 +65,17 @@ module.exports = class Server {
 
             process.exit(1);
         }
-
     }
 
     async init() {
         await this.initPlugins();
 
-        // await this.db.initConn(config);
+        await this.initViews();
 
-        this.router.registerRoutes();
+        await this.initMiddleware();
 
-        await this.startServer();
+        await this.initRoutes();
+
+        await this.initServer();
     }
-}
+};

@@ -1,5 +1,5 @@
-const AppsRoutes = require('./AppRoutes');
+// const AppsRoutes = require('./AppRoutes');
 
-module.exports = [
-    new AppsRoutes(),
-].flat(1);
+// module.exports = [
+//     new AppsRoutes(),
+// ].flat(1);

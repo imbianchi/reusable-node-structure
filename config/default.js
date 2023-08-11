@@ -1,4 +1,4 @@
-require('dotenv').config()
+require('dotenv').config();
 
 
 module.exports = {
@@ -17,5 +17,4 @@ module.exports = {
         name: process.env.DB_NAME,
         server: process.env.DB_SERVER_NAME,
     },
-    plugins: []
 }
