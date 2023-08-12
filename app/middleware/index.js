@@ -1,21 +1,21 @@
-const middlewareBeforeExample = require('./middlewareExample')
-const middlewareAfterExample = require('./middlewareExample')
+
 
 module.exports = class Middleware {
-    constructor(req) {
-        this.before = [
-            middlewareBeforeExample,
-        ],
-        this.after = [
-            middlewareAfterExample,
+    constructor() {
+        this.midExample = {
+            handler: () =>
+                console.log('Logging a system middleware example.'),
+        }
+    }
+
+    async getMiddlewares() {
+        return [
+            this.midExample,
         ]
     }
 
-    async beforeRequest() {
-        this.before.forEach(func => func());
-    }
-
-    async afterRequest() {
-        this.after.forEach(func => func());
+    async register() {
+        const middlewares = await this.getMiddlewares();
+        middlewares.forEach(mid => mid.handler())
     }
 }

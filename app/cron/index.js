@@ -1,5 +1,6 @@
-const httpMethods = require("../enum/httpMethods");
+const httpMethods = require("../enums/httpMethods");
 const HapiCron = require('hapi-cron');
+
 
 module.exports = class CronJobs {
     constructor() {
@@ -7,16 +8,17 @@ module.exports = class CronJobs {
             plugin: HapiCron,
             options: {
                 jobs: [
+                    // INSERT CRONJOBS HERE
                     {
                         name: 'Cron Example',
-                        time: '*/60 * * * * *',
+                        time: '*/1000 * * * * *',
                         timezone: 'Europe/London',
                         request: {
                             method: httpMethods.GET,
-                            url: '/',
+                            url: '/cron/example',
                         },
                         onComplete: (res) => console.log('Cron Test: ', res),
-                    }
+                    },
                 ],
             }
         }
