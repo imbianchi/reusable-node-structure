@@ -12,6 +12,7 @@ module.exports = {
         masterName: process.env.API_MASTER_NAME,
         masterUsername: process.env.API_MASTER_USERNAME,
         masterEmail: process.env.API_MASTER_EMAIL,
+        masterPassword: process.env.API_MASTER_PASSWORD,
     },
     db: {
         env: process.env.DB_ENV,
@@ -29,5 +30,7 @@ module.exports = {
         apiTokenKey: process.env.API_TOKEN_KEY,
         tokenMaxAge: process.env.TOKEN_MAX_AGE,
         tokenAlgorithm: process.env.TOKEN_ALGORITHM,
+        cipherAlgorithm: process.env.CIPHER_ALGORITHM,
+        tokenIV: process.env.TOKEN_IV,
     }
 }

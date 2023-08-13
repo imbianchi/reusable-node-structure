@@ -1,6 +1,6 @@
 
 const Joi = require("@hapi/joi");
-const httpMethods = require("../../../../app/enums/httpMethods");
+const httpMethods = require("../../../../app/enums/httpMethodsEnum");
 const httpStatus = require("../../../misc/httpStatus");
 
 

@@ -4,11 +4,12 @@ const HapiReactViews = require('hapi-react-views');
 const Middleware = require('../app/middleware');
 const Routes = require('./routes');
 const DBConnect = require('../app/database');
+const SecurityManager = require('../app/managers/securityManager');
 
 
 module.exports = class Server {
     constructor(app) {
-        // this.securityManager = new SecurityManager();
+        this.securityManager = new SecurityManager();
         this.routes = new Routes('v1');
         this.middleware = new Middleware();
         this.db = new DBConnect({
@@ -46,7 +47,7 @@ module.exports = class Server {
             validate: (req, decodedData) => {
                 try {
                     let token = decodedData.auth.token;
-                    const decryptedData = this.securityManager.decrypToken(token);
+                    const decryptedData = this.securityManager.decryptToken(token);
 
                     return { isValid: true };
                 } catch (error) {

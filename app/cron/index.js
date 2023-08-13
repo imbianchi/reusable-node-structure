@@ -1,4 +1,4 @@
-const httpMethods = require("../enums/httpMethods");
+const httpMethods = require("../enums/httpMethodsEnum");
 const HapiCron = require('hapi-cron');
 
 

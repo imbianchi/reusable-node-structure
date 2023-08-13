@@ -1,10 +1,7 @@
-const actionEnums = require('../enums/actionEnum');
+const actionEnums = require('../enums/actionsEnum');
 const servicesEnum = require('../enums/servicesEnum');
-const UserService = require('../services/userService');
-const AuthService = require('../services/authService');
-const SecurityManager = require('../managers/securityManager');
-const ReplyManager = require('./replyManager');
-const ItemService = require('../services/itemService');
+const UsersService = require('../../src/v1/services/usersService');
+const AuthService = require('../../src/v1/services/authService');
 const now = new Date();
 
 
@@ -13,13 +10,9 @@ module.exports = class Facade {
         this.actionEnums = actionEnums;
         this.servicesEnum = servicesEnum;
 
-        this.securityManager = new SecurityManager();
-        this.replyManager = new ReplyManager();
-
         this.services = [];
-        this.services[servicesEnum.user] = new UserService();
+        this.services[servicesEnum.user] = new UsersService();
         this.services[servicesEnum.auth] = new AuthService();
-        this.services[servicesEnum.item] = new ItemService();
     };
 
     async _auth(request) {
@@ -30,15 +23,10 @@ module.exports = class Facade {
                     '[ERROR] - [File: facadeManager.js - METHOD _AUTH - ',
                     `[${now}] - ${error}`,
                 );
-
-                this.replyManager.handleError(
-                    this.replyManager.statusEnum.unauthorized,
-                    error,
-                )
             });
     };
 
-    async action(service, action, data, auth = false) {
+    async action({ service, action, data, auth = false }) {
         if (auth) {
             data.loggedUser = await this._auth(data)
                 .then(result => result)
@@ -47,41 +35,28 @@ module.exports = class Facade {
                         '[ERROR] - [File: facadeManager.js - METHOD async action - ',
                         `[${now}] - ${error}`, ``
                     );
-
-                    this.replyManager.handleError(
-                        this.replyManager.statusEnum.unauthorized,
-                        error,
-                    )
                 });
         };
 
         switch (action) {
-            case actionEnums.index:
-                return this.services[service].index(data);
-            case actionEnums.find:
-                return this.services[service].find(data);
-            case actionEnums.insert:
-                return this.services[service].insert(data);
-            case actionEnums.delete:
-                return this.services[service].delete(data);
-            case actionEnums.update:
-                return this.services[service].update(data);
+            case actionEnums.getAll:
+                return this.services[service].getAll(data);
+            case actionEnums.getOne:
+                return this.services[service].getOne(data);
+            case actionEnums.insertOne:
+                return this.services[service].insertOne(data);
+            case actionEnums.deleteOne:
+                return this.services[service].deleteOne(data);
+            case actionEnums.updateOne:
+                return this.services[service].updateOne(data);
 
             case actionEnums.login:
                 return this.services[service].login(data)
-            case actionEnums.refreshToken:
-                return this.services[service].refreshToken(data)
-            case actionEnums.forgotPassword:
-                return this.services[service].forgotPassword(data)
-            case actionEnums.resetPassword:
-                return this.services[service].resetPassword(data)
-
-            case actionEnums.insertItemsByQRCodeURL:
-                return this.services[service].insertItemsByQRCodeURL(data)
 
             default:
-                this.replyManager.handleError(
-                    this.replyManager.statusEnum.notImplemented
+                console.log(
+                    '[ERROR] - [File: facadeManager.js - METHOD action switch block - ',
+                    `[${now}] - ${error}`, ``
                 );
         };
     };

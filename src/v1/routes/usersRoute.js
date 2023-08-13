@@ -1,15 +1,17 @@
-const httpMethods = require("../../../app/enums/httpMethods");
+const Joi = require("@hapi/joi");
+const httpMethodsEnum = require("../../../app/enums/httpMethodsEnum");
+const UsersController = require("../controllers/usersController");
 
 
-module.exports = class UserRoutes {
+module.exports = class UsersRoute {
     constructor() {
         this.path = '/users';
+        this.usersController = new UsersController();
 
         this.getAll = {
             path: this.path,
-            method: [httpMethods.GET],
+            method: [httpMethodsEnum.GET],
             options: {
-                disabled: true,
                 auth: 'token',
                 validate: {
                     headers: Joi.object(
@@ -35,7 +37,7 @@ module.exports = class UserRoutes {
                 },
             },
             handler: async (req, h) => {
-                return await this.userControllerss.getAll(req)
+                return await this.usersController.getAll(req)
                     .then(result => result)
                     .catch(error => {
                         console.log(
@@ -49,7 +51,7 @@ module.exports = class UserRoutes {
 
         this.getOne = {
             path: `${this.path}/{id}`,
-            method: [httpMethods.GET],
+            method: [httpMethodsEnum.GET],
             options: {
                 auth: 'token',
                 validate: {
@@ -77,7 +79,7 @@ module.exports = class UserRoutes {
                 },
             },
             handler: async (req, h) => {
-                return await this.userControllers.getOne(req)
+                return await this.usersController.getOne(req)
                     .then(result => result)
                     .catch(error => {
                         console.log(
@@ -91,7 +93,7 @@ module.exports = class UserRoutes {
 
         this.createOne = {
             path: this.path,
-            method: [httpMethods.POST],
+            method: [httpMethodsEnum.POST],
             config: {
                 validate: {
                     payload: Joi.object({
@@ -102,7 +104,7 @@ module.exports = class UserRoutes {
                 },
             },
             handler: async (req, h) => {
-                return await this.userControllers.createOne(req)
+                return await this.usersController.createOne(req)
                     .then(result => result)
                     .catch(error => {
                         console.log(
@@ -116,7 +118,7 @@ module.exports = class UserRoutes {
 
         this.deleteOne = {
             path: `${this.path}/{id}`,
-            method: [httpMethods.DELETE],
+            method: [httpMethodsEnum.DELETE],
             config: {
                 validate: {
                     headers: Joi.object({
@@ -127,7 +129,7 @@ module.exports = class UserRoutes {
                 },
             },
             handler: async (req, h) => {
-                return await this.userControllers.deleteOne(req)
+                return await this.usersController.deleteOne(req)
                     .then(result => result)
                     .catch(error => {
                         console.log(
@@ -141,7 +143,7 @@ module.exports = class UserRoutes {
 
         this.updateOne = {
             path: `${this.path}/{id}`,
-            method: [httpMethods.PUT],
+            method: [httpMethodsEnum.PUT],
             config: {
                 validate: {
                     payload: Joi.object({
@@ -151,7 +153,7 @@ module.exports = class UserRoutes {
                 },
             },
             handler: async (req, h) => {
-                return await this.userControllers.updateOne(req)
+                return await this.usersController.updateOne(req)
                     .then(result => result)
                     .catch(error => {
                         console.log(

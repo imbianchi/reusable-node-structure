@@ -1,5 +1,6 @@
 
 const config = require('config');
+const SecurityManager = require('../../managers/securityManager');
 
 
 module.exports = {
@@ -8,6 +9,7 @@ module.exports = {
             name: config.get('api.masterName'),
             username: config.get('api.masterUsername'),
             email: config.get('api.masterEmail'),
+            password:  new SecurityManager().encryptPassword(config.get('api.masterPassword')),
         });
     },
   

@@ -1,5 +1,6 @@
 const crypto = require('crypto');
 const jwt = require('jsonwebtoken');
+const config = require('config');
 
 
 module.exports = class SecurityManager {
@@ -10,13 +11,14 @@ module.exports = class SecurityManager {
 
     generateToken(encryptedTokenData, expDate = new Date().getTime() + 86400000) {
         const options = {
-            algorithm: this.config.data.SECURITY.TOKEN_ALGORITHM,
-            expiresIn: expDate
+            algorithm: config.get('security.tokenAlgorithm'),
+            expiresIn: expDate,
         };
 
-        const token = this.jwt.sign(
-            { encryptedData: encryptedTokenData },
-            this.config.data.SECURITY.TOKEN_KEY,
+        const token = this.jwt.sign({
+            encryptedData: encryptedTokenData,
+        },
+            config.get('security.tokenKey'),
             options,
         );
 
@@ -24,7 +26,7 @@ module.exports = class SecurityManager {
     };
 
     decryptToken(token) {
-        let decoded = this.jwt.verify(token, this.config.data.SECURITY.TOKEN_KEY);
+        let decoded = this.jwt.verify(token, config.get('security.apiTokenKey'));
         return decoded.encryptedData;
     };
 
@@ -33,9 +35,9 @@ module.exports = class SecurityManager {
             const jsonData = JSON.stringify(data);
 
             const cipher = this.crypto.createCipheriv(
-                this.config.data.SECURITY.CIPHER_ALGORITHM,
-                Buffer.from(this.config.data.SECURITY.TOKEN_KEY),
-                this.config.data.CRYPTO.TOKEN_IV,
+                config.get('security.cipherAlgorithm'),
+                Buffer.from(config.get('security.apiTokenKey')),
+                config.get('security.tokenIV'),
             );
 
             return Buffer.concat([cipher.update(jsonData), cipher.final()]).toString('hex');
@@ -62,9 +64,9 @@ module.exports = class SecurityManager {
     encryptPassword(password) {
         try {
             const cipher = this.crypto.createCipheriv(
-                this.config.data.SECURITY.CIPHER_ALGORITHM,
-                Buffer.from(this.config.data.SECURITY.TOKEN_KEY),
-                this.config.data.CRYPTO.TOKEN_IV,
+                config.get('security.cipherAlgorithm'),
+                Buffer.from(config.get('security.apiTokenKey')),
+                config.get('security.tokenIV'),
             );
 
             return Buffer.concat([cipher.update(password), cipher.final()]).toString('hex');
@@ -76,9 +78,9 @@ module.exports = class SecurityManager {
     decryptPassword(password) {
         try {
             const decipher = this.crypto.createDecipheriv(
-                this.config.data.SECURITY.CIPHER_ALGORITHM,
-                Buffer.from(this.config.data.SECURITY.TOKEN_KEY),
-                this.config.data.CRYPTO.TOKEN_IV,
+                config.get('security.cipherAlgorithm'),
+                Buffer.from(config.get('security.apiTokenKey')),
+                config.get('security.tokenIV'),
             );
 
             decipher.setAutoPadding(false);

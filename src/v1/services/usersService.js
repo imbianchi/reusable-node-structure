@@ -1,9 +1,11 @@
-const path = require('path');
-const UserRepository = require('../repository/userRepository');
+const UsersRepository = require("../repositories/usersRepository");
 
 
-module.exports = class UserServices {
-    constructor() { }
+
+module.exports = class UsersService {
+    constructor() {
+        this.userRepository = new UsersRepository();
+     }
 
     async getAll(options) {
         return await this.userRepository.getAll(options)
@@ -14,8 +16,8 @@ module.exports = class UserServices {
             })
     }
 
-    async getOne(options) {
-        return await this.userRepository.getOne(options)
+    async getOne(data) {
+        return await this.userRepository.getOne(data)
             .then(result => result)
             .catch(error => {
                 // @TODO: CREATE ERROR LOG HERE
