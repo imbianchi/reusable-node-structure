@@ -1,7 +1,4 @@
 const mongoose = require('mongoose');
-const mongodb = require('mongodb');
-const config = require('config');
-
 
 
 module.exports = class DBConnect {
@@ -29,24 +26,8 @@ module.exports = class DBConnect {
         this.db = db;
     }
 
-    async checkAndCreateDB() {
-        const client = new mongodb.MongoClient(`mongodb://${this.dbHost}:${this.dbPort}/${this.dbName}`);
-
-        const newDB = client.db(config.get('db.name'));
-        const collections = await client.db().listCollections().toArray();
-        const collectionNames = collections.map(c => c.name);
-
-        if (!collectionNames.includes('users')) {
-            newDB.createCollection("users");
-
-            console.log('Database & Users table created!');
-        }
-    }
-
     async connect() {
         try {
-            this.checkAndCreateDB();
-
             if (this.dbString) {
                 mongoose.connect(this.dbString);
                 this.db = mongoose.connection;

@@ -1,12 +1,12 @@
-// In this file you can configure migrate-mongo
+const config = require('config');
 
-const config = {
+const configMigrations = {
   mongodb: {
     // TODO Change (or review) the url to your MongoDB:
-    url: "mongodb://localhost:27017",
+    url: `mongodb://${config.get('db.host')}:${config.get('db.port')}`,
 
     // TODO Change this to your database name:
-    databaseName: "YOURDATABASENAME",
+    databaseName: config.get('db.name'),
 
     options: {
       useNewUrlParser: true, // removes a deprecation warning when connecting
@@ -27,10 +27,10 @@ const config = {
 
   // Enable the algorithm to create a checksum of the file contents and use that in the comparison to determine
   // if the file should be run.  Requires that scripts are coded to be run multiple times.
-  useFileHash: false,
+  useFileHash: true,
 
   // Don't change this, unless you know what you're doing
   moduleSystem: 'commonjs',
 };
 
-module.exports = config;
+module.exports = configMigrations;

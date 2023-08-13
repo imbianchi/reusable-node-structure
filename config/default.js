@@ -9,6 +9,9 @@ module.exports = {
     },
     api: {
         userAgent: process.env.API_USER_AGENT,
+        masterName: process.env.API_MASTER_NAME,
+        masterUsername: process.env.API_MASTER_USERNAME,
+        masterEmail: process.env.API_MASTER_EMAIL,
     },
     db: {
         env: process.env.DB_ENV,
