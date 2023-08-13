@@ -1,13 +1,9 @@
 const config = require('config');
 const fs = require('fs');
 const mongodb = require('mongodb');
-const {
-    create,
-    up,
-} = require('migrate-mongo');
+const { create } = require('migrate-mongo');
+const { exit } = require('process');
 
-let createdFile = "";
-let matchingFiles = [];
 const directoryPath = 'app/database/migrations';
 const codeToInsert = `
 const config = require('config');\n\n
@@ -27,60 +23,8 @@ module.exports = {
     },
 };`;
 
-const insertCodeMigration = async (file) => {
-    fs.readFile(directoryPath + '/' + file, 'utf8', (err) => {
-        if (err) {
-            console.error('Error reading file:', err);
-            return;
-        }
-
-        fs.writeFile(directoryPath + '/' + file, codeToInsert, 'utf8', err => {
-            if (err) {
-                console.error('Error writing file:', err);
-                return;
-            }
-
-            return;
-        });
-    });
-
-    return;
-}
-
-const readAndCreateMigrationFile = async () => {
-    fs.readdir(directoryPath, async (err, files) => {
-        if (err) {
-            console.error('Error reading migrations directory:', err);
-            return;
-        }
-
-        matchingFiles = files.filter(file => file.includes('create-master-user'));
-
-        console.log('Creating users migrations file...');
-
-        if (matchingFiles.length < 1) {
-            return await create('create-master-user');
-        }
-
-        console.log('Migration file already created, carry on...')
-        return matchingFiles[0];
-    });
-};
-
-const readAndInsertCodeIntoFile = async () => {
-    fs.readdir(directoryPath, async (err, files) => {
-        if (err) {
-            console.error('Error reading migrations directory:', err);
-            return;
-        }
-
-        matchingFiles = files.filter(file => file.includes('create-master-user') && file);
-
-        await insertCodeMigration(matchingFiles[0]);
-    });
-}
-
 const checkAndCreateDB = async () => {
+    console.log('Checking if main database already exists...');
     const client = new mongodb.MongoClient(`mongodb://${config.get('db.host')}:${config.get('db.port')}/${config.get('db.name')}`);
 
     const newDB = client.db(config.get('db.name'));
@@ -90,19 +34,52 @@ const checkAndCreateDB = async () => {
     if (!collectionNames.includes('users')) {
         newDB.createCollection("users");
 
-        return console.log('Database & Users table created!');
+        console.log('Database & Users table created!');
+        return;
     }
 
-    return console.log('Database & Users collection already exists, skipping...');
+    console.log('Database & Users collection already exists, skipping...');
+    return;
 }
 
 (async () => {
-    console.log('Checking if main database already exists...');
+    try {
+        await checkAndCreateDB();
 
-    await checkAndCreateDB();
+        console.log('Checking if users migration file already exists...');
 
-    console.log('Checking if users migration file already exists...');
+        const files = fs.readdirSync(directoryPath);        
+        let fileExists = false;
 
-    await readAndCreateMigrationFile();
-    setTimeout(() => readAndInsertCodeIntoFile(), 2500);
+        files.forEach(file => {
+            if(file.includes('create-master-user')) {
+                fileExists = true;
+            }
+        });
+
+        if (!fileExists) {
+            console.log('Creating users migrations file...');
+            const file = await create('create-master-user');
+
+            return setTimeout(() => {
+                return fs.writeFile(directoryPath + '/' + file, codeToInsert, 'utf8', err => {
+                    if (err) {
+                        console.error('Error writing file:', err);
+                        return;
+                    }
+
+                    console.log('Created user master code migration.');
+
+                    return exit(0);
+                });
+            }, 3000);
+        }
+
+        console.log('Yep, it does exists. Skipping...');
+
+        exit(0);
+    } catch (error) {
+        console.log('Error: ', error);
+    }
+
 })();
