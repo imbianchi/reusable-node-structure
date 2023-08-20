@@ -7,13 +7,10 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "prod": "node -r dotenv/config index.js dotenv_config_path=./.env",
     "homolog": "node -r dotenv/config index.js dotenv_config_path=./.env",
-    "init": "npm run migrate:init && nodemon -r dotenv/config index.js dotenv_config_path=./.env",
-    "dev": "npm run migrate:up && nodemon -r dotenv/config index.js dotenv_config_path=./.env",
-    "migrate:init":"node ./migrate-script.js --init && npm run migrate:up",
-    "migrate:up": "migrate-mongo up",
-    "migrate:down": "migrate-mongo down",
-    "migrate:clean": "node ./migrate-script.js --clean",
-    "migrate:restart": "node ./migrate-script.js --init"
+    "init": "nodemon -r dotenv/config index.js dotenv_config_path=./.env",
+    "dev": "nodemon -r dotenv/config index.js dotenv_config_path=./.env",
+    "migrate:up": "npx sequelize-cli db:migrate",
+    "migrate:undo": "npx sequelize-cli db:migrate:undo"
   },
   "keywords": [],
   "author": "Joao Bianchi",
@@ -35,14 +32,14 @@
     "hapi-react-views": "^11.0.0",
     "jsonwebtoken": "^9.0.1",
     "lodash": "^4.17.21",
-    "mongodb": "^5.7.0",
-    "mongoose": "^7.4.1",
     "react": "^18.2.0",
+    "sequelize": "^6.32.1",
+    "tedious": "^16.4.0",
     "uuid": "^9.0.0"
   },
   "devDependencies": {
     "eslint": "^8.46.0",
-    "migrate-mongo": "^10.0.0",
-    "nodemon": "^2.0.19"
+    "nodemon": "^2.0.19",
+    "sequelize-cli": "^6.6.1"
   }
 }

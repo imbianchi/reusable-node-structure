@@ -3,7 +3,7 @@ const plugins = require('../app/plugins');
 const HapiReactViews = require('hapi-react-views');
 const Middleware = require('../app/middleware');
 const Routes = require('./routes');
-const DBConnect = require('../app/database');
+const db = require('../app/database');
 const SecurityManager = require('../app/managers/securityManager');
 
 
@@ -12,17 +12,6 @@ module.exports = class Server {
         this.securityManager = new SecurityManager();
         this.routes = new Routes('v1');
         this.middleware = new Middleware();
-        this.db = new DBConnect({
-            dbHost: config.get('db.host'),
-            dbName: config.get('db.name'),
-            dbPort: config.get('db.port'),
-            dbPswd: config.get('db.pswd'),
-            dbUriPrefix: config.get('db.uriPrefix'),
-            dbUser: config.get('db.user'),
-            dbDebug: config.get('db.debug'),
-            dbEnv: config.get('db.env'),
-            dbString: config.get('db.connString'),
-        });
         this.server = app.server({
             host: config.get('server.host'),
             port: config.get('server.port'),
@@ -87,10 +76,6 @@ module.exports = class Server {
         await this.middleware.register();
     }
 
-    async initDBConn() {
-        this.db.connect();
-    }
-
     async start() {
         try {
             await this.server.start();
@@ -118,7 +103,6 @@ module.exports = class Server {
 
     async init() {
         await this.initPlugins();
-        await this.initDBConn();
         await this.initSecurityStrategy();
         await this.initViews();
         await this.initRoutes();

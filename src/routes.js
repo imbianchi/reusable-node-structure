@@ -28,7 +28,7 @@ module.exports = class Routes {
                     }),
                 },
             },
-            handler: (req, h) => {
+            handler: async (req, h) => {
                 return h.response({
                     statusCode: httpStatus.SUCCESS,
                     message: 'Server is running!',
