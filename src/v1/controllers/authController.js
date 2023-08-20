@@ -1,7 +1,7 @@
-const Facade = require("../../../app/managers/facadeManager");
-const SecurityManager = require("../../../app/managers/securityManager");
+const Facade = require("@managers/facadeManager");
+const SecurityManager = require("@managers/securityManager");
 const AuthRepository = require("../repositories/authRepository");
-const userAgent = require("../utils/userAgent");
+const userAgent = require("@utils/userAgent");
 
 
 

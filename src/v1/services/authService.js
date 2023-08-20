@@ -1,6 +1,6 @@
 const AuthRepository = require("../repositories/authRepository");
 const UsersRepository = require("../repositories/usersRepository");
-const userAgent = require("../utils/userAgent");
+const userAgent = require("@utils/userAgent");
 const now = new Date();
 
 

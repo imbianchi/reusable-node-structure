@@ -1,4 +1,4 @@
-const httpMethods = require('../app/enums/httpMethodsEnum');
+const httpMethods = require('@enums/httpMethodsEnum');
 const httpStatus = require('./misc/httpStatus');
 const Joi = require('@hapi/joi');
 const CronjobExample = require('./v1/routes/cronRoutes/exampleCronRoute');

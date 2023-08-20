@@ -1,4 +1,4 @@
-const Facade = require('../../../app/managers/facadeManager');
+const Facade = require('@managers/facadeManager');
 
 
 module.exports = class UsersController {

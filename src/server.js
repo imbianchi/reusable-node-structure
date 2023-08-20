@@ -1,10 +1,10 @@
 const config = require('config');
-const plugins = require('../app/plugins');
+const plugins = require('@plugins');
 const HapiReactViews = require('hapi-react-views');
-const Middleware = require('../app/middleware');
+const Middleware = require('@middleware');
 const Routes = require('./routes');
-const db = require('../app/database');
-const SecurityManager = require('../app/managers/securityManager');
+const db = require('@database');
+const SecurityManager = require('@managers/securityManager');
 
 
 module.exports = class Server {

@@ -7,8 +7,7 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "prod": "node -r dotenv/config index.js dotenv_config_path=./.env",
     "homolog": "node -r dotenv/config index.js dotenv_config_path=./.env",
-    "init": "nodemon -r dotenv/config index.js dotenv_config_path=./.env",
-    "dev": "nodemon -r dotenv/config index.js dotenv_config_path=./.env",
+    "dev": "nodemon -r ./setup-aliases.js -r @babel/register -r dotenv/config index.js dotenv_config_path=./.env",
     "migrate:up": "npx sequelize-cli db:migrate",
     "migrate:undo": "npx sequelize-cli db:migrate:undo"
   },
@@ -16,7 +15,6 @@
   "author": "Joao Bianchi",
   "license": "ISC",
   "dependencies": {
-    "@babel/preset-env": "^7.22.10",
     "@babel/preset-react": "^7.22.5",
     "@babel/register": "^7.22.5",
     "@hapi/boom": "^10.0.1",
@@ -32,12 +30,16 @@
     "hapi-react-views": "^11.0.0",
     "jsonwebtoken": "^9.0.1",
     "lodash": "^4.17.21",
+    "module-alias": "^2.2.3",
     "react": "^18.2.0",
     "sequelize": "^6.32.1",
     "tedious": "^16.4.0",
     "uuid": "^9.0.0"
   },
   "devDependencies": {
+    "@babel/core": "^7.22.10",
+    "@babel/node": "^7.22.10",
+    "@babel/preset-env": "^7.22.10",
     "eslint": "^8.46.0",
     "nodemon": "^2.0.19",
     "sequelize-cli": "^6.6.1"
