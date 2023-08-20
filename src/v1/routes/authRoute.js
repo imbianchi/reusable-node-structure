@@ -29,7 +29,7 @@ module.exports = class AuthRoute {
                             message: Joi.string(),
                             data: Joi.object({
                                 id: Joi.string().required(),
-                                name: Joi.string().required(),
+                                fullName: Joi.string().required(),
                                 username: Joi.string().required(),
                                 email: Joi.string().email().required(),
                                 token: Joi.string().required(),
@@ -40,7 +40,9 @@ module.exports = class AuthRoute {
             handler: async (req, h) => {
                 return await this.authController.login(req)
                     .then(result => result)
-                    .catch(error => error);
+                    .catch(error => {
+                        throw error;
+                    });
             }
         }
 
@@ -58,18 +60,18 @@ module.exports = class AuthRoute {
                     ).unknown(),
                 },
                 response: {
-                    schema: Joi.object(
-                        {
-                            message: Joi.string(),
-                            data: Joi.any()
-                        },
+                    schema: Joi.object({
+                        message: Joi.string(),
+                    },
                     ).meta({ className: 'Response' })
                 }
             },
             handler: async (req, res) => {
                 return await this.authController.logout(req, res)
                     .then(result => result)
-                    .catch(error => error)
+                    .catch(error => {
+                        throw error;
+                    })
             }
         }
     }

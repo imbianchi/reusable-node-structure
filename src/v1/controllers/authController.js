@@ -2,6 +2,7 @@ const Facade = require("@managers/facadeManager");
 const SecurityManager = require("@managers/securityManager");
 const AuthRepository = require("../repositories/authRepository");
 const userAgent = require("@utils/userAgent");
+const RequestIp = require('@supercharge/request-ip')
 
 
 
@@ -25,7 +26,7 @@ module.exports = class AuthController {
         });
 
         let decryptedPassword = this.securityManager.decryptPassword(password);
-        
+
         if (decryptedPassword !== userExists.password) {
             // @TODO: IMPLEMENT HANDLE ERROR HERE
         };
@@ -41,7 +42,7 @@ module.exports = class AuthController {
         }
 
         let session = {
-            userId: userExists._id.toString(),
+            userId: userExists.id,
             osName: os.name,
             osVersion: os.version,
             device: os.device,
@@ -49,44 +50,78 @@ module.exports = class AuthController {
             browserVersion: browser.version,
             browserEngine: browser.engine,
             browserEngineVersion: browser.engine_version,
-            refreshToken: this.securityManager.sessionDataEncrypt(userExists._id.toString()),
+            ipAddress: RequestIp.getClientIp(req),
+            sessionStatus: 'active',
+            lastActivityTime: new Date(),
+            sessionType: userExists.type,
+            refreshToken: "",
         };
 
-        // const data = {
-        //     id: userExists._id.toString(),
-        //     name: userExists.name,
-        //     username: userExists.username,
-        //     email: userExists.email,
-        // };
+        const data = {
+            id: userExists.id,
+            fullName: userExists.fullName,
+            username: userExists.username,
+            email: userExists.email,
+        };
 
-        // let sessionResult = await this.authRepository.insertOne(session)
-        //     .then(resultInsert => resultInsert)
-        //     .catch((error) => {
-        //         throw error;
-        //     });
+        return await this.facadeManager.action({
+            service: this.facadeManager.servicesEnum.auth,
+            action: this.facadeManager.actionEnums.login,
+            data: session,
+        }).then(async result => {
+            session.id = result.id;
+            session.refreshToken = this.securityManager
+                .generateToken(this.securityManager.sessionDataEncrypt(session.id));
 
-        // data.token = this.securityManager.generateToken(sessionResult);
-        // data.refreshToken = session.refreshToken;
+            const updatedSession = await this.facadeManager.action({
+                service: this.facadeManager.servicesEnum.auth,
+                action: this.facadeManager.actionEnums.updateOne,
+                data: session,
+            })
 
-        // return await this.facadeManager.action(
-        //     this.facadeManager.servicesEnum.auth,
-        //     this.facadeManager.actionEnums.login,
-        // ).then(result => result)
-        //     .catch(error => {
-        //         throw error;
-        //     });
+            if (!updatedSession) {
+                // @TODO - Implement reply manager here
+                return
+            }
+
+            data.token = this.securityManager
+                .generateToken(this.securityManager.sessionDataEncrypt(session));
+
+            // @TODO - Implement reply manager here
+            return {
+                data,
+                message: "User logged in with success!",
+            }
+
+        }).catch(error => {
+            throw error;
+        });
+
     };
 
     async logout(req) {
         const data = {
-            headers: req.headers,
-            auth: req.auth,
+            sessionStatus: 'inactive',
+            refreshToken: '',
+            sessionEndTime: new Date(),
         };
 
-        return await this.facadeManager.action(
-            this.facadeManager.servicesEnum.auth,
-            this.facadeManager.actionEnums.deleteOne,
-        ).then(result => result)
+        return await this.facadeManager.action({
+            service: this.facadeManager.servicesEnum.auth,
+            action: this.facadeManager.actionEnums.logout,
+            auth: {
+                headers: req.headers,
+                auth: req.auth,
+            },
+            data,
+        }).then(result => {
+            if (!result) {
+                // @TODO IMPLEMENT RESPONSE ERROR HERE
+                return
+            }
+
+            return { message: "User logged out with success!" }
+        })
             .catch(error => {
                 throw error;
             });

@@ -18,7 +18,7 @@ module.exports = class SecurityManager {
         const token = this.jwt.sign({
             encryptedData: encryptedTokenData,
         },
-            config.get('security.tokenKey'),
+            config.get('security.apiTokenKey'),
             options,
         );
 
@@ -49,9 +49,9 @@ module.exports = class SecurityManager {
     sessionDataDecrypt(decryptedTokenData) {
         try {
             let decipher = this.crypto.createDecipheriv(
-                this.config.data.SECURITY.CIPHER_ALGORITHM,
-                Buffer.from(this.config.data.SECURITY.TOKEN_KEY),
-                this.config.data.CRYPTO.TOKEN_IV,
+                config.get('security.cipherAlgorithm'),
+                Buffer.from(config.get('security.apiTokenKey')),
+                config.get('security.tokenIV'),
             );
 
             return decipher.update(decryptedTokenData, 'hex', 'utf8');

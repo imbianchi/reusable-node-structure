@@ -12,7 +12,7 @@ module.exports = {
         masterName: process.env.API_MASTER_NAME,
         masterUsername: process.env.API_MASTER_USERNAME,
         masterEmail: process.env.API_MASTER_EMAIL,
-        masterPassword: process.env.API_MASTER_PASSWORD,
+        masterPswd: process.env.API_MASTER_PASSWORD,
     },
     db: {
         dialect: process.env.DB_DIALECT,

@@ -13,16 +13,43 @@ module.exports = {
         allowNull: false,
         field: 'user_id'
       },
+      osName: {
+        type: Sequelize.DataTypes.STRING,
+        field: 'os_name',
+      },
+      osVersion: {
+        type: Sequelize.DataTypes.STRING,
+        field: 'os_version',
+      },
+      device: {
+        type: Sequelize.DataTypes.STRING,
+        field: 'device',
+      },
+      browser: {
+        type: Sequelize.DataTypes.STRING,
+        field: 'browser',
+      },
+      browserVersion: {
+        type: Sequelize.DataTypes.STRING,
+        field: 'browser_version',
+      },
+      browserEngine: {
+        type: Sequelize.DataTypes.STRING,
+        field: 'browser_engine',
+      },
+      browserEngineVersion: {
+        type: Sequelize.DataTypes.STRING,
+        field: 'browser_engine_version',
+      },
       sessionStartTime: {
         type: Sequelize.DataTypes.DATE,
         allowNull: false,
         field: 'session_start_time',
-        defaultValue: Sequelize.DataTypes.NOW,
+        defaultValue: new Date(),
       },
       sessionEndTime: {
         type: Sequelize.DataTypes.DATE,
         field: 'session_end_time',
-        defaultValue: Sequelize.DataTypes.NOW,
       },
       lastActivityTime: {
         type: Sequelize.DataTypes.DATE,
@@ -32,68 +59,33 @@ module.exports = {
         type: Sequelize.DataTypes.STRING,
         allowNull: false,
         field: "session_type",
-        validate: {
-          isIn: [['bot', 'person']],
-          msg: "Session type must be 'bot' or 'person'.",
-        },
       },
       sessionStatus: {
         type: Sequelize.DataTypes.STRING,
         allowNull: false,
         field: "session_status",
-        validate: {
-          isIn: [['active', 'inactive', 'deactivated']],
-          msg: "Session status must be 'active', 'inactive' or 'deactivated'.",
-        },
+      },
+      refreshToken: {
+        type: Sequelize.DataTypes.TEXT,
+        field: "refresh_token",
       },
       ipAddress: {
         type: Sequelize.DataTypes.STRING,
-        allowNull: false,
         field: "ip_address",
-        validate: {
-          isIP: {
-            msg: "IP must be valid.",
-          },
-        }
-      },
-      userAgent: {
-        type: Sequelize.DataTypes.STRING,
-        allowNull: false,
-        field: "user_agent",
       },
       sessionData: {
         type: Sequelize.DataTypes.TEXT,
         field: "session_data",
-        validate: {
-          isValidJson: (value) => {
-            try {
-              JSON.parse(value);
-            } catch (e) {
-              return false;
-            }
-            return true;
-          },
-        }
       },
       botInfo: {
         type: Sequelize.DataTypes.TEXT,
         field: "bot_info",
-        validate: {
-          isValidJson: (value) => {
-            try {
-              JSON.parse(value);
-            } catch (e) {
-              return false;
-            }
-            return true;
-          },
-        }
       },
       createdAt: {
         allowNull: false,
         type: Sequelize.DataTypes.DATE,
         field: 'created_at',
-        defaultValue: Sequelize.DataTypes.NOW,
+        defaultValue: new Date(),
       },
       updatedAt: {
         type: Sequelize.DataTypes.DATE,

@@ -26,10 +26,12 @@ module.exports = class Facade {
             });
     };
 
-    async action({ service, action, data, auth = false }) {
+    async action({ service, action, data, auth = {} }) {
         if (auth) {
-            data.loggedUser = await this._auth(data)
-                .then(result => result)
+            await this._auth(auth)
+                .then(result => {
+                    data.sessionId = result.id
+                })
                 .catch(error => {
                     console.log(
                         '[ERROR] - [File: facadeManager.js - METHOD async action - ',
@@ -52,11 +54,13 @@ module.exports = class Facade {
 
             case actionEnums.login:
                 return this.services[service].login(data)
+            case actionEnums.logout:
+                return this.services[service].updateOne(data)
 
             default:
                 console.log(
                     '[ERROR] - [File: facadeManager.js - METHOD action switch block - ',
-                    `[${now}] - ${error}`, ``
+                    `[${now}] - ${action}`,
                 );
         };
     };

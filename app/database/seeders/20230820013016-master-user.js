@@ -1,5 +1,8 @@
 const config = require('config');
 const { v4 } = require('uuid');
+const SecurityManager = require('../../managers/securityManager');
+
+const encryptedPassword = new SecurityManager().encryptPassword(config.get('api.masterPswd'));
 
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
@@ -21,6 +24,8 @@ module.exports = {
       role: "god-mode",
       status: "active",
       email: config.get('api.masterEmail'),
+      password: encryptedPassword,
+      type: 'person',
       created_at: new Date(),
     }])
   },

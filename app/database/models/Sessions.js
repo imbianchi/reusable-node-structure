@@ -9,8 +9,7 @@ module.exports = (sequelize, DataTypes) => {
          * The `models/index` file will call this method automatically.
          */
         static associate(models) {
-            // define association here
-            models.Users.hasMany(models.Sessions, { as: 'userId' })
+            models.Users.hasMany(models.Sessions, { foreignKey: 'user_id' })
         }
     }
 
@@ -26,17 +25,45 @@ module.exports = (sequelize, DataTypes) => {
             allowNull: false,
             field: 'user_id'
         },
+        osName: {
+            type: DataTypes.STRING,
+            field: 'os_name',
+        },
+        osVersion: {
+            type: DataTypes.STRING,
+            field: 'os_version',
+        },
+        device: {
+            type: DataTypes.STRING,
+            field: 'device',
+        },
+        browser: {
+            type: DataTypes.STRING,
+            field: 'browser',
+        },
+        browserVersion: {
+            type: DataTypes.STRING,
+            field: 'browser_version',
+        },
+        browserEngine: {
+            type: DataTypes.STRING,
+            field: 'browser_engine',
+        },
+        browserEngineVersion: {
+            type: DataTypes.STRING,
+            field: 'browser_engine_version',
+        },
         sessionStartTime: {
             type: DataTypes.DATE,
             allowNull: false,
             field: 'session_start_time',
-            defaultValue: DataTypes.NOW,
+            defaultValue: new Date(),
         },
         sessionEndTime: {
             type: DataTypes.DATE,
             field: 'session_end_time'
         },
-        lastActicityTime: {
+        lastActivityTime: {
             type: DataTypes.DATE,
             field: 'last_activity_time'
         },
@@ -45,8 +72,10 @@ module.exports = (sequelize, DataTypes) => {
             allowNull: false,
             field: 'session_type',
             validate: {
-                isIn: [['bot', 'person']],
-                msg: "Session type must be 'bot' or 'person'.",
+                isIn: {
+                    args: [['bot', 'person']],
+                    msg: "Session type must be 'bot' or 'person'.",
+                },
             },
         },
         sessionStatus: {
@@ -54,9 +83,15 @@ module.exports = (sequelize, DataTypes) => {
             allowNull: false,
             field: 'session_status',
             validate: {
-                isIn: [['active', 'inactive', 'deactivated']],
-                msg: "Session status must be 'active', 'inactive' or 'deactivated'.",
+                isIn: {
+                    args: [['active', 'inactive', 'deactivated']],
+                    msg: "Session status must be 'active', 'inactive' or 'deactivated'.",
+                }
             },
+        },
+        refreshToken: {
+            type: DataTypes.TEXT,
+            field: "refresh_token",
         },
         ipAddress: {
             type: DataTypes.STRING,
@@ -68,40 +103,39 @@ module.exports = (sequelize, DataTypes) => {
                 },
             }
         },
-        userAgent: {
-            type: DataTypes.STRING,
-            allowNull: false,
-            field: 'user_agent'
-        },
         sessionData: {
             type: DataTypes.TEXT,
             field: 'session_data',
-            isValidJson: (value) => {
-                try {
-                    JSON.parse(value);
-                } catch (e) {
-                    return false;
-                }
-                return true;
-            },
+            validate: {
+                isValidJson: (value) => {
+                    try {
+                        JSON.parse(value);
+                    } catch (e) {
+                        return false;
+                    }
+                    return true;
+                },
+            }
         },
         botInfo: {
             type: DataTypes.TEXT,
             field: 'bot_info',
-            isValidJson: (value) => {
-                try {
-                    JSON.parse(value);
-                } catch (e) {
-                    return false;
-                }
-                return true;
-            },
+            validate: {
+                isValidJson: (value) => {
+                    try {
+                        JSON.parse(value);
+                    } catch (e) {
+                        return false;
+                    }
+                    return true;
+                },
+            }
         },
         createdAt: {
             allowNull: false,
             type: DataTypes.DATE,
             field: 'created_at',
-            defaultValue: DataTypes.NOW,
+            defaultValue: new Date(),
         },
         updatedAt: {
             type: DataTypes.DATE,

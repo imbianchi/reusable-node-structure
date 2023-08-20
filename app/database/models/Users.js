@@ -9,7 +9,7 @@ module.exports = (sequelize, DataTypes) => {
          * The `models/index` file will call this method automatically.
          */
         static associate(models) {
-            models.Sessions.belongsTo(models.Users);
+            models.Sessions.belongsTo(models.Users, { foreignKey: 'user_id' });
         }
     }
 
@@ -36,7 +36,7 @@ module.exports = (sequelize, DataTypes) => {
             unique: true,
             validate: {
                 notNull: {
-                    msg: "User full name must be provided",
+                    msg: "User username/nickname must be provided",
                 }
             }
         },
@@ -44,6 +44,16 @@ module.exports = (sequelize, DataTypes) => {
             type: DataTypes.STRING,
             allowNull: false,
             defaultValue: 'guest',
+        },
+        type: {
+            type: DataTypes.STRING,
+            allowNull: false,
+            validate: {
+                isIn: {
+                    args: [['bot', 'person']],
+                    msg: "User type must be 'bot' or 'person'.",
+                }
+            },
         },
         status: {
             type: DataTypes.STRING,
@@ -56,15 +66,19 @@ module.exports = (sequelize, DataTypes) => {
             unique: true,
             validate: {
                 isEmail: {
-                    msg: "Email not valid.",
+                    msg: "Email must be valid.",
                 }
             }
+        },
+        password: {
+            type: DataTypes.STRING,
+            allowNull: false,
         },
         createdAt: {
             allowNull: false,
             type: DataTypes.DATE,
             field: 'created_at',
-            defaultValue: DataTypes.NOW,
+            defaultValue: new Date(),
         },
         updatedAt: {
             type: DataTypes.DATE,

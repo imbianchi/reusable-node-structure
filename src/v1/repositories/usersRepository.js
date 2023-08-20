@@ -1,3 +1,5 @@
+const models = require('@models');
+const { Op } = require("sequelize");
 const now = new Date();
 
 
@@ -6,12 +8,11 @@ module.exports = class UsersRepository {
 
     async getAll() {
         try {
-            // return Users.find({})
-            //     .lean()
-            //     .then(result => result)
-            //     .catch(error => {
-            //         throw error;
-            //     })
+            return await models.Users.findAll({})
+                .then(result => result)
+                .catch(error => {
+                    throw error;
+                })
         } catch (error) {
             console.log('[ERROR] - [USER REPOSITORY - METHOD getAll - ', `[${now}] - Error: `, error);
             throw error;
@@ -20,18 +21,20 @@ module.exports = class UsersRepository {
 
     async getOne(data) {
         try {
-            // return Users.findOne({
-            //     $or: [
-            //         { _id: data.id },
-            //         { email: data.email },
-            //         { name: data.name },
-            //     ]
-            // })
-            //     .lean()
-            //     .then(result => result)
-            //     .catch(error => {
-            //         throw error;
-            //     })
+            return await models.Users.findOne({
+                where: {
+                    [Op.or]: [
+                        { id: data.id || "" },
+                        { email: data.email || "" },
+                        { fullName: data.name || "" },
+                    ]
+                },
+                raw: true,
+            })
+                .then(result => result)
+                .catch(error => {
+                    throw error;
+                })
         } catch (error) {
             console.log('[ERROR] - [USER REPOSITORY - METHOD getOne - ', `[${now}] - Error: `, error);
             throw error;

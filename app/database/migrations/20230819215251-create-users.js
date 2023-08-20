@@ -18,14 +18,15 @@ module.exports = {
         type: Sequelize.DataTypes.STRING,
         allowNull: false,
         unique: true,
-        validate: {
-          len: [5, 45],
-        }
       },
       role: {
         type: Sequelize.DataTypes.STRING,
         allowNull: false,
         defaultValue: "guest",
+      },
+      type: {
+        type: Sequelize.DataTypes.STRING,
+        allowNull: false,
       },
       status: {
         type: Sequelize.DataTypes.STRING,
@@ -36,17 +37,16 @@ module.exports = {
         type: Sequelize.DataTypes.STRING,
         allowNull: false,
         unique: true,
-        validate: {
-          isEmail: {
-            msg: "Email must be valid.",
-          }
-        }
+      },
+      password: {
+        type: Sequelize.DataTypes.STRING,
+        allowNull: false,
       },
       createdAt: {
         allowNull: false,
         type: Sequelize.DataTypes.DATE,
         field: 'created_at',
-        defaultValue: Sequelize.DataTypes.NOW,
+        defaultValue: new Date(),
       },
       updatedAt: {
         type: Sequelize.DataTypes.DATE,
