@@ -4,8 +4,8 @@ const moduleAlias = require('module-alias');
 moduleAlias.addAliases({
     '@app': __dirname + '/app',
     '@src': __dirname + '/src',
-    '@config': __dirname + '/config',
-    '@database': __dirname + '/app/database',
+    '@api-config': __dirname + '/config',
+    '@db': __dirname + '/app/database',
     '@cron': __dirname + '/app/cron',
     '@cache': __dirname + '/app/cache',
     '@enums': __dirname + '/app/enums',

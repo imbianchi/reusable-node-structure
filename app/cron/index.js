@@ -11,7 +11,7 @@ module.exports = class CronJobs {
                     // INSERT CRONJOBS HERE
                     {
                         name: 'Cron Example',
-                        time: '*/10000 * * * * *',
+                        time: '*/20000 * * * * *',
                         timezone: 'Europe/London',
                         request: {
                             method: httpMethods.GET,

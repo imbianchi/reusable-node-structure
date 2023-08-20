@@ -1,5 +1,5 @@
 {
-  "name": "nodejs-bigdata",
+  "name": "node-reusable-structure",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
@@ -7,9 +7,11 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "prod": "node -r dotenv/config index.js dotenv_config_path=./.env",
     "homolog": "node -r dotenv/config index.js dotenv_config_path=./.env",
-    "dev": "nodemon -r ./setup-aliases.js -r @babel/register -r dotenv/config index.js dotenv_config_path=./.env",
+    "dev": "npm run db:conn:check && nodemon -r ./setup-aliases.js -r @babel/register -r dotenv/config index.js dotenv_config_path=./.env",
     "migrate:up": "npx sequelize-cli db:migrate",
-    "migrate:undo": "npx sequelize-cli db:migrate:undo"
+    "migrate:restart": "npx sequelize-cli db:migrate:undo:all && npm run migrate:up && npm run db:seed:all",
+    "db:seed:all": "npx sequelize-cli db:seed:all",
+    "db:seed:undo": "npx sequelize-cli db:seed:undo"
   },
   "keywords": [],
   "author": "Joao Bianchi",
@@ -41,6 +43,7 @@
     "@babel/node": "^7.22.10",
     "@babel/preset-env": "^7.22.10",
     "eslint": "^8.46.0",
+    "node-reusable-api": "^1.0.0",
     "nodemon": "^2.0.19",
     "sequelize-cli": "^6.6.1"
   }

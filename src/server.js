@@ -3,7 +3,6 @@ const plugins = require('@plugins');
 const HapiReactViews = require('hapi-react-views');
 const Middleware = require('@middleware');
 const Routes = require('./routes');
-const db = require('@database');
 const SecurityManager = require('@managers/securityManager');
 
 
